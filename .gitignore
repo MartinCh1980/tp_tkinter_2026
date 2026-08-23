@@ -1,0 +1,25 @@
+# Bytecode / cache de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+venv/
+.venv/
+env/
+
+# Base de datos SQLite generada en runtime
+*.db
+*.sqlite3
+
+# Archivos de sistema
+.DS_Store
+Thumbs.db
+
+# Archivos temporales del reporte (PDF/JPG usados solo para revisión visual)
+*.pdf
+page-*.jpg
+
+# Configuración de editores
+.vscode/
+.idea/
