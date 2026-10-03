@@ -7,18 +7,22 @@ para distintas entidades (**Vehículos** y **Propietarios**) variando
 
 ## Integrantes
 
-- Nombre Apellido
+- Alvarez Nicolás
+- Aranda Antony
+- Chamorro Martín
 
 ## Estructura del proyecto
 
-```
+```text
 .
-├── main.py              # Punto de entrada: instancia la clase genérica para cada entidad
-├── crud_gui.py           # Clase genérica de interfaz (CRUDFrame)
-├── repositorio.py         # Capa de datos: interfaz Repositorio + implementaciones (memoria / SQLite)
-├── plan_de_pruebas.docx   # Reporte con los casos de prueba ejecutados
-├── .gitignore
-└── README.md
+├── src/
+│   ├── __init__.py          # Define src como paquete de Python
+│   ├── crud_gui.py          # Clase genérica de interfaz (CRUDFrame)
+│   └── repositorio.py       # Capa de datos: contrato Repositorio e implementaciones
+├── main.py                  # Punto de entrada de la aplicación
+├── .gitignore               # Archivos y carpetas excluidos del control de versiones
+└── README.md                # Documentación del proyecto
+
 ```
 
 ## Arquitectura
@@ -33,7 +37,7 @@ interfaz gráfica de la lógica de persistencia:
   útil para probar sin depender de una base de datos.
 - **`RepositorioSQLite`**: implementación con base de datos real, genérica
   para cualquier tabla/columnas.
-- **`CRUDFrame`** (en `crud_gui.py`): clase genérica de Tkinter que arma el
+- **`CRUDFrame`** (en `src.crud_gui.py`): clase genérica de Tkinter que arma el
   formulario, la tabla y los botones **dinámicamente** a partir de una lista
   de campos, y delega toda operación de datos en el repositorio recibido por
   parámetro. No conoce SQLite ni ningún detalle de persistencia.
@@ -57,6 +61,4 @@ cambiar la constante `USAR_SQLITE = True` en `main.py`.
 
 ## Plan de pruebas
 
-El reporte `plan_de_pruebas.docx` documenta los casos de prueba ejecutados,
-incluyendo validación de campos vacíos, flujo normal (happy path) y manejo
-de errores de selección al actualizar/eliminar sin un registro elegido.
+Los casos de prueba ejecutados (validación de campos vacíos, flujo normal y manejo de selección al actualizar/eliminar) se encuentran documentados en el informe plan_de_pruebas.docx, entregado por separado a través de la plataforma de la cátedra.

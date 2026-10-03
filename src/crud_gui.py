@@ -1,35 +1,15 @@
-"""
-Vista + Controlador de la interfaz.
-
-CRUDFrame es LA clase genérica: se instancia una vez por entidad
-(Vehículos, Propietarios, lo que sea) variando únicamente los
-parámetros del constructor. No conoce SQLite ni nada de bases de datos:
-solo conoce el contrato de Repositorio (obtener_todos/agregar/actualizar/eliminar).
-"""
-
 import tkinter as tk
 from tkinter import ttk, messagebox
 
 
 class CRUDFrame(tk.Frame):
     def __init__(self, master, titulo_entidad, campos, repositorio):
-        """
-        master: el widget contenedor (ventana o Notebook)
-        titulo_entidad: string para mostrar, ej "Vehículos"
-        campos: lista de tuplas (clave_interna, etiqueta_visible)
-                ej [("patente", "Patente"), ("marca", "Marca"), ("modelo", "Modelo")]
-        repositorio: instancia de Repositorio (memoria o SQLite)
-        """
+
         super().__init__(master)
         self.titulo_entidad = titulo_entidad
         self.campos = campos
         self.repositorio = repositorio
 
-        # --- Gestión del estado ---
-        # Acá vive la clave de todo el punto "Gestión del Estado" del enunciado:
-        # un diccionario que mapea clave_interna -> widget Entry.
-        # Gracias a esto, leer o limpiar el formulario es un solo bucle,
-        # sin importar cuántos campos tenga la entidad.
         self.entradas: dict[str, tk.Entry] = {}
 
         self.id_seleccionado = None  # id del registro elegido en la tabla (o None)
@@ -38,26 +18,19 @@ class CRUDFrame(tk.Frame):
         self._construir_botones()
         self._construir_tabla()
         self._refrescar_tabla()
-
-    # ------------------------------------------------------------------
-    # Construcción dinámica del formulario
-    # ------------------------------------------------------------------
+    
     def _construir_formulario(self):
         frame_form = tk.LabelFrame(self, text=f"Datos de {self.titulo_entidad}")
         frame_form.pack(padx=10, pady=10, fill="x")
 
-        # Acá está la "Generación Dinámica" que pide el TP: un solo bucle
-        # que recorre self.campos y crea Label + Entry para cada uno.
-        # Si mañana la entidad tiene 3 campos o 10, este código no cambia.
         for fila, (clave, etiqueta) in enumerate(self.campos):
-            lbl = tk.Label(frame_form, text=f"{etiqueta}:")
-            lbl.grid(row=fila, column=0, sticky="e", padx=5, pady=4)
+            lbl = tk.Label(frame_form, text=f"{etiqueta}:") #crea etiqueta
+            lbl.grid(row=fila, column=0, sticky="e", padx=5, pady=4) #la ubica
 
-            entrada = tk.Entry(frame_form, width=30)
+            entrada = tk.Entry(frame_form, width=30) #crea el campo de entrada de texto
             entrada.grid(row=fila, column=1, sticky="we", padx=5, pady=4)
 
-            # guardamos la referencia en el diccionario de estado
-            self.entradas[clave] = entrada
+            self.entradas[clave] = entrada # guardamos la referencia en el diccionario de estado
 
         frame_form.columnconfigure(1, weight=1)
 
@@ -80,10 +53,7 @@ class CRUDFrame(tk.Frame):
 
         self.tabla.pack(padx=10, pady=(0, 10), fill="both", expand=True)
         self.tabla.bind("<<TreeviewSelect>>", self._al_seleccionar_fila)
-
-    # ------------------------------------------------------------------
-    # Lectura / limpieza del formulario (usa el diccionario de estado)
-    # ------------------------------------------------------------------
+    
     def _leer_formulario(self) -> dict:
         return {clave: entrada.get().strip() for clave, entrada in self.entradas.items()}
 
@@ -97,10 +67,7 @@ class CRUDFrame(tk.Frame):
         for clave, entrada in self.entradas.items():
             entrada.delete(0, tk.END)
             entrada.insert(0, datos.get(clave, ""))
-
-    # ------------------------------------------------------------------
-    # Validación
-    # ------------------------------------------------------------------
+    
     def _validar_campos_completos(self, datos: dict) -> bool:
         faltantes = [
             etiqueta for clave, etiqueta in self.campos if not datos.get(clave)
@@ -113,9 +80,6 @@ class CRUDFrame(tk.Frame):
             return False
         return True
 
-    # ------------------------------------------------------------------
-    # Operaciones CRUD (delegan todo en self.repositorio)
-    # ------------------------------------------------------------------
     def _crear(self):
         datos = self._leer_formulario()
         if not self._validar_campos_completos(datos):
@@ -148,9 +112,6 @@ class CRUDFrame(tk.Frame):
         self._limpiar_formulario()
         self._refrescar_tabla()
 
-    # ------------------------------------------------------------------
-    # Tabla
-    # ------------------------------------------------------------------
     def _refrescar_tabla(self):
         for item in self.tabla.get_children():
             self.tabla.delete(item)
